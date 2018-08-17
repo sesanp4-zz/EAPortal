@@ -1,0 +1,28 @@
+
+body{
+   background: grey;
+   font-size: 13px
+}
+
+
+h6{
+    margin-bottom: 20%
+}
+
+#container{
+    background: #f1f1f1;
+    padding: 2%;
+    margin-top: 20%;  
+    border-radius: 20px
+}
+button{
+    
+    color:white;
+    margin-left: 6%
+}
+
+input{
+    padding: 2%;
+    width: 90%;
+    margin-left: 2%
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <script>
+    var user = window.localStorage.getItem("portalusername");
+    var pass = window.localStorage.getItem("portalpassword");
+     if(user===null){
+         window.location="index.html";
+     }
+</script>
+        <title>Home</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/home.css">
+        <link rel="stylesheet" href="css/tableexport.min.css">
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/home.js"></script>
+      <!--   
+      <script src="js/xlsx.core.min.js"></script>
+        <script src="js/xlsx.full.min.js"></script><script src="js/tableexport.js"></script>      
+        <script src="js/FileSaver.js"></script>
+         <script src="js/tableexport.min.js"></script>
+        <script src="js/sprintf.min.js"></script>
+        <script src="js/jspdf.min.js"></script>
+        <script src="js/base64.min.js"></script>
+      <script src="js/FileSaver.min.js"></script>-->
+        
+      <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>-->
+    <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+        
+        
+    </head>
+    <body>
+       
+        <nav class="row">
+             <div class="col-sm-1">
+                <img src="images/ubared.png" class="img-fluid" alt="uba logo">
+            </div>
+            <button class="btn btn-danger btn-sm offset-sm-10" id="sign_out">SIGN OUT</button>
+        </nav>
+        
+        <div class="row" style="padding: 0 1%">
+        <main class="col-sm-12">           
+             <caption><h3 class="text-center text-info">TRANSACTION TABLE</h3></caption>
+            <div id="section" class="col-sm-12">               
+                 <div class="table-responsive">                     
+                     <div class="row">
+                         <form class="form-inline">
+                             <!--<label class="mr-sm-2 ml-sm-4">START : </label>
+                             <input type="date" class="form-control mb-sm-2 form-control-sm"> 
+                             <label class="mr-sm-2 ml-sm-2">END : </label>
+                             <input type="date" class="form-control mb-2 form-control-sm">-->
+                             <label class="mr-sm-2 ml-sm-3 text-info" id="current"></label>
+                             <label class="mr-sm-2 ml-sm-3 text-info" id="total"></label>
+                             <label class="mr-sm-2 ml-sm-3 text-info" id="per_page"></label>
+                             <label class="mr-sm-2 ml-sm-2 text-info" >Search By Page: </label>
+                             <input type="text" class="form-control mb-2 form-control-sm" placeholder="page no" id="num">
+                             <button class="btn btn-sm btn-success ml-sm-4 mb-2" id="search">Search</button>
+                             <button class="btn btn-sm btn-outline-secondary ml-sm-4 mb-2" id="export">Export</button>
+                             <img src="images/ajaxload.gif" alt="" class="ml-sm-2" id="ajaxload">
+                         </form>
+                     </div>
+                   <table class="table table-hover table-bordered table-sm" id="table">
+                       
+                                    <thead class="thead-light">                                   
+                                    <th>COUNTRY</th>
+                                    <th>RECIPIENT</th>
+                                    <th>AMOUNT</th>
+                                    <th>CURRENCY</th>
+                                    <th>MERCHANT REF</th>                                   
+                                    <th>INTERNAL REF</th>
+                                    <th>RESPONSE MSG</th>
+                                    <th>NETWORK</th>
+                                    <th>NARRATION</th>
+                                    <th>PROCESSOR BAL</th>
+                                    <th>TRANSACTION TYPE</th>
+                                    <th>TRANSACTION TIME</th>
+                                     <th>EMAIL</th>
+                                    </thead>
+                                    <tbody>
+                                        
+                                    </tbody>
+                                   </table> 
+                     <div class="row" id="pagin_row">
+                         <ul class="pagination" style="margin-left: 2%">
+                             <li class="page-item"><a class="page-link" href="#" id="prev">Prev</a></li>
+                             <li class="page-item"><a class="page-link" href="#" id="next">Next</a></li>
+                         </ul>
+                     </div>
+                           </div>  
+            </div>
+                
+                            <!--Approve modal-->
+            
+                  <div class="modal" id="approve">
+                
+                <div class="modal-dialog">
+                    
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <p>TRANSACTION APPROVED</p>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
+            </div>
+                            
+                            
+            <!--Create -->                
+               <div class="modal" id="create">
+                
+                <div class="modal-dialog modal-lg">
+                    
+                    <div class="modal-content">
+                        
+                        <div class="modal-header">
+                            <h3 class="modal-title text-muted">CREATE MERCHANT</h3>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            
+                            <div class="row">
+                                <div class="col-sm-4 form-group"> 
+                                 <label class="">First Name</label>                               
+                                <input type="text" id="firstname" class="form-control form-control-sm" placeholder="First Name" required/> 
+                                </div>
+                                <div class="col-sm-4 form-group"> 
+                                <label class="">Last Name</label>
+                                <input type="text" id="lastname" class="form-control  form-control-sm" placeholder="Last Name" required/>
+                                </div>
+                                <div class="col-sm-4 form-group"> 
+                                  <label class="">Address1</label>
+                                     <input type="text" id="addressline1" class="form-control  form-control-sm" placeholder="Home Address" required/>
+                                </div>
+                                <div class="col-sm-4 form-group"> 
+                                     <label class="">Address 2</label>
+                                     <input type="text" id="addressline2" class="form-control form-control-sm" placeholder="Home Address 2"/>
+                                </div>            
+                                <div class="col-sm-4 form-group">
+                                    <label class="">City</label>
+                                     <input type="text" id="city" class="form-control  form-control-sm" placeholder="City" required/>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                     <label class="">state</label>
+                                     <input type="text" id="state" class="form-control form-control-sm" placeholder="State" required/>
+                                </div>
+                                <div class="col-sm-4 form-group" >
+                                    <label class="">Country</label>
+                                   <input type="text" id="country" class="form-control form-control-sm" placeholder="Country" required/>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                   <label class="">Phone</label>
+                                   <input type="text" id="phonenumber" class="form-control form-control-sm" placeholder="Phone number" required/>        
+                                </div>    
+                                <div class="col-sm-4 form-group">
+                                     <label class="">Mobile No</label>
+                                   <input type="text" id="mobile" class="form-control form-control-sm" placeholder="Mobile Number"/>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="">Business Name</label>
+                                    <input type="text" id="businessname" class="form-control form-control-sm" placeholder="Business Name" required/>
+                                </div>
+                                <div class="col-sm-4 form-group">                                    
+                                     <label class="">Website</label>
+                                     <input type="text" id="website" class="form-control form-control-sm" placeholder="Website Name"/>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                     <label class="mr-sm-1">Rc Number</label>
+                                     <input type="text" id="rcnumber" class="form-control mr-sm-1 form-control-sm" placeholder="RC Number" required/>
+                                </div>
+                                
+                                <div class="col-sm-4 form-group">
+                                     <label class="mr-sm-1">Email</label>
+                                     <input type="text" id="email" class="form-control form-control-sm" placeholder="Email" required/>
+                                </div>
+                                
+                                <div class="col-sm-4 form-group">
+                                     <label class="">Username</label>
+                                     <input type="text" id="username" class="form-control form-control-sm" placeholder="Username" required/>
+                                </div>
+                                
+                                <div class="col-sm-4 form-group">
+                                     <label class="">Password</label>
+                                     <input type="password" id="password" class="form-control form-control-sm" placeholder="Password" required/>
+                                </div>
+                                
+                                <div class="col-sm-3 form-group">
+                                    <button class="btn btn-outline-secondary btn-sm" id="register">CREATE</button> 
+                                     
+                                </div>
+                                
+                            </div>
+                          
+                          
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                
+            </div> 
+            <!--End-->
+            
+        </main>
+            
+        </div>
+        <script src="js/xlsx.core.min.js"></script>
+        <script src="js/FileSaver.min.js"></script>
+         <script src="js/tableexport.min.js"></script>
+         <script>
+            $(document).ready(function(){
+                // $("#table").tableExport({position:"top"});
+                //$("#table").reset();
+            }) ;
+                 </script>
+    </body>
+    
+</html>
